@@ -92,12 +92,10 @@ const App = () => {
     <div>
       <h2>blogs</h2>
       <div>
-        <p>{user.name} logged-in</p>
-        <div>
-            <button onClick={handleLogOut}>
-              logout
-            </button>
-          </div>
+        <p>{user.name} logged-in  <button onClick={handleLogOut}>
+          logout
+        </button> </p>
+       
       </div>
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
