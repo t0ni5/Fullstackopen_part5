@@ -1,8 +1,10 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import Notification from './components/Notification'
+import CreateBlogForm from './components/CreateBlogForm'
+import Togglable from './components/Togglable'
 
 
 const App = () => {
@@ -54,52 +56,66 @@ const App = () => {
     </form>
   )
 
-  const createBlogForm = () => (
-    <>
-      <div>
-        <h2>blogs</h2>
-      </div>
-      <form onSubmit={handleCreating}>
-        <div>
-          title
-          <input
-            type="text"
-            name="title"
-            value={title}
-            onChange={({ target }) => setTitle(target.value)}
-          />
-        </div>
-        <div>
-          auhtor
-          <input
-            type="text"
-            name="author"
-            value={author}
-            onChange={({ target }) => setAuthor(target.value)}
-          />
-        </div>
-        <div>
-          url
-          <input
-            type="text"
-            name="url"
-            value={url}
-            onChange={({ target }) => setUrl(target.value)}
-          />
-        </div>
-        <button type="submit">create new</button>
-      </form>
-    </>
-  )
+  // const createBlogForm = () => (
+  //   <>
+  //     <div>
+  //       <h2>blogs</h2>
+  //     </div>
+  //     <form onSubmit={handleCreating}>
+  //       <div>
+  //         title
+  //         <input
+  //           type="text"
+  //           name="title"
+  //           value={title}
+  //           onChange={({ target }) => setTitle(target.value)}
+  //         />
+  //       </div>
+  //       <div>
+  //         auhtor
+  //         <input
+  //           type="text"
+  //           name="author"
+  //           value={author}
+  //           onChange={({ target }) => setAuthor(target.value)}
+  //         />
+  //       </div>
+  //       <div>
+  //         url
+  //         <input
+  //           type="text"
+  //           name="url"
+  //           value={url}
+  //           onChange={({ target }) => setUrl(target.value)}
+  //         />
+  //       </div>
+  //       <button type="submit">create new</button>
+  //     </form>
+  //   </>
+  // )
 
-  const handleCreating = async (event) => {
+  const handleTitleChange = ({ target }) => {
+    setTitle(target.value)
+  }
+
+  const handleAuthorChange = ({ target }) => {
+    setAuthor(target.value)
+  }
+
+  const handleUrlChange = ({ target }) => {
+    setUrl(target.value)
+  }
+
+  const handleBlogCreating = async (event) => {
     event.preventDefault()
+    console.log(title)
     const blogObject = {
       title: title,
       author: author,
       url: url,
     }
 
+    blogFormRef.current.toggleVisibility()
     blogService
       .create(blogObject)
       .then(returnedBlog => {
@@ -109,12 +125,12 @@ const App = () => {
         setUrl('')
       })
 
-      setErrorMessage(
-        `a new blog ${blogObject.title} by ${blogObject.author} added`
-      )
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+    setErrorMessage(
+      `a new blog ${blogObject.title} by ${blogObject.author} added`
+    )
+    setTimeout(() => {
+      setErrorMessage(null)
+    }, 5000)
 
   }
 
@@ -154,6 +170,24 @@ const App = () => {
 
   }
 
+  const blogFormRef = useRef()
+  const blogForm = () => (
+    <div>
+        <Togglable buttonLabel="new blog" ref={blogFormRef}>
+          <CreateBlogForm
+            handleBlogCreating={handleBlogCreating}
+            title={title}
+            author={author}
+            url={url}
+            handleTitleChange={handleTitleChange}
+            handleAuthorChange={handleAuthorChange}
+            handleUrlChange={handleUrlChange}
+          />
+        </Togglable>
+      </div>
+  )
+
+
   if (user === null) {
     return (
       <div>
@@ -173,9 +207,7 @@ const App = () => {
           logout
         </button> </p>
       </div>
-      <div>
-        {createBlogForm()}
-      </div>
+      {blogForm()}
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
       )}
@@ -183,6 +215,5 @@ const App = () => {
   )
 
 }
-
 
 export default App
