@@ -1,6 +1,23 @@
 import React from 'react'
+import { useState } from 'react'
 
-const CreateBlogForm = ({ handleBlogCreating, title, author, url, handleTitleChange, handleAuthorChange, handleUrlChange }) => {
+const CreateBlogForm = ({ handleBlogCreating }) => {
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
+
+  const handleTitleChange = ({ target }) => {
+    setTitle(target.value)
+  }
+
+  const handleAuthorChange = ({ target }) => {
+    setAuthor(target.value)
+  }
+
+  const handleUrlChange = ({ target }) => {
+    setUrl(target.value)
+  }
+
   return (
     <div>
       <div>
