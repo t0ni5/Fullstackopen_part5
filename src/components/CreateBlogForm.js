@@ -18,12 +18,28 @@ const CreateBlogForm = ({ handleBlogCreating }) => {
     setUrl(target.value)
   }
 
+  const handleCreating = (event) => {
+    event.preventDefault()
+    const newBlog = {
+      title: title,
+      author: author,
+      url: url,
+      likes: 0
+    }
+
+    handleBlogCreating(newBlog)
+
+    setTitle('')
+    setAuthor('')
+    setUrl('')
+  }
+
   return (
     <div>
       <div>
         <h2>Create new blog</h2>
       </div>
-      <form onSubmit={handleBlogCreating}>
+      <form onSubmit={handleCreating}>
         <div>
           title
           <input

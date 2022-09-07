@@ -12,9 +12,6 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
   const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => {
@@ -56,77 +53,19 @@ const App = () => {
     </form>
   )
 
-  // const createBlogForm = () => (
-  //   <>
-  //     <div>
-  //       <h2>blogs</h2>
-  //     </div>
-  //     <form onSubmit={handleCreating}>
-  //       <div>
-  //         title
-  //         <input
-  //           type="text"
-  //           name="title"
-  //           value={title}
-  //           onChange={({ target }) => setTitle(target.value)}
-  //         />
-  //       </div>
-  //       <div>
-  //         auhtor
-  //         <input
-  //           type="text"
-  //           name="author"
-  //           value={author}
-  //           onChange={({ target }) => setAuthor(target.value)}
-  //         />
-  //       </div>
-  //       <div>
-  //         url
-  //         <input
-  //           type="text"
-  //           name="url"
-  //           value={url}
-  //           onChange={({ target }) => setUrl(target.value)}
-  //         />
-  //       </div>
-  //       <button type="submit">create new</button>
-  //     </form>
-  //   </>
-  // )
 
-  const handleTitleChange = ({ target }) => {
-    setTitle(target.value)
-  }
-
-  const handleAuthorChange = ({ target }) => {
-    setAuthor(target.value)
-  }
-
-  const handleUrlChange = ({ target }) => {
-    setUrl(target.value)
-  }
-
-  const handleBlogCreating = async (event) => {
-    event.preventDefault()
-    console.log(title)
-    const blogObject = {
-      title: title,
-      author: author,
-      url: url,
-    }
+  const handleBlogCreating = ( newObject ) => {
+    console.log(newObject)
 
     blogFormRef.current.toggleVisibility()
     blogService
-      .create(blogObject)
+      .create(newObject)
       .then(returnedBlog => {
         setBlogs(blogs.concat(returnedBlog))
-        setTitle('')
-        setAuthor('')
-        setUrl('')
       })
 
     setErrorMessage(
-      `a new blog ${blogObject.title} by ${blogObject.author} added`
+      `a new blog ${newObject.title} by ${newObject.author} added`
     )
     setTimeout(() => {
       setErrorMessage(null)
@@ -173,18 +112,12 @@ const App = () => {
   const blogFormRef = useRef()
   const blogForm = () => (
     <div>
-        <Togglable buttonLabel="new blog" ref={blogFormRef}>
-          <CreateBlogForm
-            handleBlogCreating={handleBlogCreating}
-            title={title}
-            author={author}
-            url={url}
-            handleTitleChange={handleTitleChange}
-            handleAuthorChange={handleAuthorChange}
-            handleUrlChange={handleUrlChange}
-          />
-        </Togglable>
-      </div>
+      <Togglable buttonLabel="new blog" ref={blogFormRef}>
+        <CreateBlogForm
+          handleBlogCreating={handleBlogCreating}
+        />
+      </Togglable>
+    </div>
   )
 
 
