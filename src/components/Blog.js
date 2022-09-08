@@ -2,7 +2,7 @@ import { useState } from 'react'
 import '../blog.css'
 import blogService from '../services/blogs'
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, updateAppComponent }) => {
   const [visible, setVisible] = useState(false)
   const [likes, setLikes] = useState(blog.likes)
 
@@ -23,30 +23,60 @@ const Blog = ({ blog }) => {
     setVisible(!visible)
   }
 
-  const returnUser = () => {
-    if (blog.user.username) {
+  const showUser = () => {
+    if (blog.user) {
       return blog.user.username
 
     }
-
-    return null
   }
 
   const increaseLikes = () => {
-    const newLikes = likes+1
-    console.log(likes)
-    const updatedBlog = blogService.update(blog.id,
-      {
-        user: blog.user.id,
-        likes: newLikes,
-        author: blog.author,
-        title: blog.title,
-        url: blog.url
-      }
-    )
+    const newLikes = likes + 1
+    if (!blog.user) {
+      blogService.update(blog.id,
+        {
+          likes: newLikes,
+          author: blog.author,
+          title: blog.title,
+          url: blog.url
+        }
+      )
+    } else if (blog.user) {
+      blogService.update(blog.id,
+        {
+          user: blog.user.id,
+          likes: newLikes,
+          author: blog.author,
+          title: blog.title,
+          url: blog.url
+        }
+      )
+    }
+
     setLikes(newLikes)
- 
+    updateAppComponent()
+
   }
+
+
+
+  const showRemoveButton = () => {
+    if (blog.user)
+      return (
+        <div>
+          <button onClick={removeBlog}>remove</button>
+        </div>
+      )
+  }
+
+  const removeBlog = async() => {
+    if (window.confirm(`Remove blog ${blog.title} by ${blog.author} ?`)) {
+      await blogService.deleteBlog(blog.id)
+      updateAppComponent()
+    }
+
+  }
+
   return (
     <div style={blogStyle}>
       <div style={hideWhenVisible}>
@@ -57,7 +87,8 @@ const Blog = ({ blog }) => {
         {blog.title} {blog.author} <button onClick={toggleVisibility}>hide</button> <br />
         {blog.url} <br />
         likes {likes}  <button onClick={increaseLikes}>like</button> <br />
-        {returnUser()}
+        {showUser()}
+        {showRemoveButton()}
 
 
       </div>

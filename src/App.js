@@ -13,12 +13,15 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
+  const [updateComponent, setUpdateComponent] = useState(true)
+
+ 
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
-      setBlogs(blogs)
+      setBlogs(blogs.sort((a, b) => a.likes - b.likes)),
     )
-  }, [])
+  }, [updateComponent])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedUser')
@@ -28,6 +31,11 @@ const App = () => {
       blogService.setToken(user.token)
     }
   }, [])
+
+  const updateAppComponent = () => {
+    setUpdateComponent(!updateComponent)
+  }
+
 
   const loginForm = () => (
     <form onSubmit={handleLogin}>
@@ -54,7 +62,7 @@ const App = () => {
   )
 
 
-  const handleBlogCreating = ( newObject ) => {
+  const handleBlogCreating = (newObject) => {
     console.log(newObject)
 
     blogFormRef.current.toggleVisibility()
@@ -109,6 +117,8 @@ const App = () => {
 
   }
 
+  
+
   const blogFormRef = useRef()
   const blogForm = () => (
     <div>
@@ -119,6 +129,7 @@ const App = () => {
       </Togglable>
     </div>
   )
+
 
 
   if (user === null) {
@@ -142,7 +153,7 @@ const App = () => {
       </div>
       {blogForm()}
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} updateAppComponent = {updateAppComponent} />
       )}
     </div>
   )
