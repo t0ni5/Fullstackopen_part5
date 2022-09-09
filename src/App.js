@@ -15,7 +15,7 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState(null)
   const [updateComponent, setUpdateComponent] = useState(true)
 
- 
+
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -100,7 +100,7 @@ const App = () => {
 
     } catch (exception) {
       setErrorMessage(
-        `wrong username or password`
+        'wrong username or password'
       )
       setTimeout(() => {
         setErrorMessage(null)
@@ -117,7 +117,7 @@ const App = () => {
 
   }
 
-  
+
 
   const blogFormRef = useRef()
   const blogForm = () => (
@@ -153,7 +153,7 @@ const App = () => {
       </div>
       {blogForm()}
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} updateAppComponent = {updateAppComponent} />
+        <Blog key={blog.id} blog={blog} updateAppComponent={updateAppComponent} />
       )}
     </div>
   )

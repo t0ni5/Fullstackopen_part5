@@ -69,7 +69,7 @@ const Blog = ({ blog, updateAppComponent }) => {
       )
   }
 
-  const removeBlog = async() => {
+  const removeBlog = async () => {
     if (window.confirm(`Remove blog ${blog.title} by ${blog.author} ?`)) {
       await blogService.deleteBlog(blog.id)
       updateAppComponent()

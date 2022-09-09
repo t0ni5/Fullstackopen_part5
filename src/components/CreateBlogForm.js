@@ -1,5 +1,6 @@
 import React from 'react'
 import { useState } from 'react'
+import PropTypes from 'prop-types'
 
 const CreateBlogForm = ({ handleBlogCreating }) => {
   const [title, setTitle] = useState('')
@@ -8,6 +9,10 @@ const CreateBlogForm = ({ handleBlogCreating }) => {
 
   const handleTitleChange = ({ target }) => {
     setTitle(target.value)
+  }
+
+  CreateBlogForm.propTypes = {
+    handleBlogCreating: PropTypes.func.isRequired
   }
 
   const handleAuthorChange = ({ target }) => {
