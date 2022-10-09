@@ -36,6 +36,32 @@ const App = () => {
     setUpdateComponent(!updateComponent)
   }
 
+  const increaseLikes = async (blog) => {
+    if (!blog.user) {
+      await blogService.update(blog.id,
+        {
+          likes: blog.likes + 1,
+          author: blog.author,
+          title: blog.title,
+          url: blog.url
+        }
+      )
+    } else if (blog.user) {
+      await blogService.update(blog.id,
+        {
+          user: blog.user.id,
+          likes: blog.likes + 1,
+          author: blog.author,
+          title: blog.title,
+          url: blog.url
+        }
+      )
+    }
+
+    updateAppComponent()
+
+  }
+
 
   const loginForm = () => (
     <form onSubmit={handleLogin}>
@@ -71,6 +97,8 @@ const App = () => {
       .then(returnedBlog => {
         setBlogs(blogs.concat(returnedBlog))
       })
+
+    updateAppComponent()
 
     setErrorMessage(
       `a new blog ${newObject.title} by ${newObject.author} added`
@@ -153,7 +181,7 @@ const App = () => {
       </div>
       {blogForm()}
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} updateAppComponent={updateAppComponent} />
+        <Blog key={blog.id} blog={blog} updateAppComponent={updateAppComponent} increaseLikes={increaseLikes} />
       )}
     </div>
   )
