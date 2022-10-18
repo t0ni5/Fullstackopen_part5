@@ -42,22 +42,27 @@ const Blog = ({ blog, updateAppComponent, increaseLikes }) => {
 
   const removeBlog = async () => {
     if (window.confirm(`Remove blog ${blog.title} by ${blog.author} ?`)) {
-      await blogService.deleteBlog(blog.id)
-      updateAppComponent()
+      try {
+        await blogService.deleteBlog(blog.id)
+        updateAppComponent()
+      } catch (exception) {
+        alert('you can delete only your own blogs')
+
+      }
     }
 
   }
 
   return (
-    <div style={blogStyle}>
-      <div style={hideWhenVisible} className="briefInfo">
-        {blog.title} {blog.author} <button onClick={toggleVisibility}>view</button>
+    <div style={blogStyle} className="blog">
+      <div style={hideWhenVisible} className='brief-info'>
+        {blog.title} {blog.author} <button id='toggleButton'onClick={toggleVisibility}>view</button>
       </div>
 
-      <div style={showWhenVisible} className="fullInfo">
+      <div style={showWhenVisible} className='full-info'>
         {blog.title} {blog.author} <button onClick={toggleVisibility}>hide</button> <br />
         {blog.url} <br />
-        likes {blog.likes}  <button onClick={() => increaseLikes(blog)}>like</button> <br />
+        <span className='like-span'>likes {blog.likes}  <button className='like-button' onClick={() => increaseLikes(blog)}>like</button> </span> <br />
         {showUser()}
         {showRemoveButton()}
 
